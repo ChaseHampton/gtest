@@ -9,7 +9,13 @@ class GtestSpiderSpider(CrawlSpider):
     start_urls = ["https://www.starwars.com/databank"]
 
     rules = (
-        Rule(LinkExtractor(restrict_xpaths='//li[@class="col item"]//a[contains(@class, "title-link")]'), callback='parse_item', follow=True),
+        Rule(
+            LinkExtractor(
+                restrict_xpaths=('//li[@class="col item"]//a[contains(@class, "title-link")]',),
+                allow=(),
+                deny=('/video','/news'),
+            ), 
+            callback='parse_item', follow=True),
     )
 
     def parse_item(self, response):

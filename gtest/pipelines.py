@@ -13,6 +13,8 @@ class GtestPipeline:
         x = ItemAdapter(item)
         r = item['response']
         x['url'] = r.url
-        x['rich_text'] = r.xpath('//div[@class="rich-text-container"]//p/text()').getall()
+        x['rich_text'] = [x.strip() for x in r.xpath('//div[@class="rich-text-container"]//p//text()').getall() if x.strip()]
         x['feature'] = r.xpath('//section[contains(@class, "featured_single")]//p/text()').getall()
-        return item
+        x['imgs'] = r.xpath('//section[contains(@class, "featured_single")]//img/@data-src').getall()
+        x.pop('response')
+        return x.asdict()
