@@ -48,6 +48,7 @@ ROBOTSTXT_OBEY = False
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    "gtest.pipelines.GtestPipeline": 300,
+   "gtest.pipelines.GtestRichParse": 350,
 }
 
 # Set settings whose default value is deprecated to a future-proof value
