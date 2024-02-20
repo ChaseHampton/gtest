@@ -7,6 +7,7 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from collections.abc import Iterable
+import re
 
 
 class GtestPipeline:
@@ -24,5 +25,7 @@ class GtestRichParse:
     def process_item(self, item, spider):
         x = ItemAdapter(item)
         if isinstance(x['rich_text'], Iterable):
-            x['rich_text'] = ''.join([x.strip() for x in x['rich_text'] if x.strip()])
+            
+            x['rich_text'] = ' '.join([x.strip() for x in x['rich_text'] if x.strip()])
+            re.sub(r'(?: (\W) | (\W)$)', lambda m: m.group()[1:], x['rich_text'])
         return x.asdict()
