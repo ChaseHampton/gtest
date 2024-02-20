@@ -26,5 +26,5 @@ class GtestRichParse:
         x = ItemAdapter(item)
         if isinstance(x['rich_text'], Iterable):
             x['rich_text'] = ' '.join([x.strip() for x in x['rich_text'] if x.strip()])
-            re.sub(r'(?: (\W) | (\W)$)', lambda m: m.group()[1:], x['rich_text'])
+        x['rich_text'] = re.sub(r'(?: (\W) | (\W)$)', lambda m: m.group()[1:], x['rich_text'])
         return x.asdict()
