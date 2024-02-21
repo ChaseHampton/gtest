@@ -19,6 +19,7 @@ class GtestSpiderSpider(CrawlSpider):
     )
 
     def parse_item(self, response):
-        item = {}
-        item['response'] = response
+        item = {
+            'response': response
+        }
         return item

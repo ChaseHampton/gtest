@@ -16,8 +16,10 @@ class GtestPipeline:
         r = item['response']
         x['url'] = r.url
         x['rich_text'] = [x.strip() for x in r.xpath('//div[@class="rich-text-container"]//p//text()').getall() if x.strip()]
-        x['feature'] = r.xpath('//section[contains(@class, "featured_single")]//p/text()').getall()
-        x['imgs'] = r.xpath('//section[contains(@class, "featured_single")]//img/@data-src').getall()
+        x['feature'] = '\n'.join(r.xpath('//section[contains(@class, "featured_single")]//p/text()').getall())
+        x['imgs'] = r.xpath('//section[contains(@class, "featured_single")]//img/@data-src').getall() | \
+                    r.xpath('//section[contains(@class, "rich_text")]//img/@src').getall()
+        x['name'] = r.xpath('//section[contains(@class, "featured_single")]//h1/span/text()').get().strip()
         x.pop('response')
         return x.asdict()
     
