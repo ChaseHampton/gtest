@@ -7,6 +7,7 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from collections.abc import Iterable
+from scrapy.utils.response import open_in_browser
 import re
 
 
@@ -17,12 +18,21 @@ class GtestPipeline:
         x['url'] = r.url
         x['rich_text'] = [x.strip() for x in r.xpath('//div[@class="rich-text-container"]//p//text()').getall() if x.strip()]
         x['feature'] = '\n'.join(r.xpath('//section[contains(@class, "featured_single")]//p/text()').getall())
-        x['imgs'] = r.xpath('//section[contains(@class, "featured_single")]//img/@data-src').getall() | \
-                    r.xpath('//section[contains(@class, "rich_text")]//img/@src').getall()
-        x['name'] = r.xpath('//section[contains(@class, "featured_single")]//h1/span/text()').get().strip()
+        x["imgs"] = (
+            r.xpath(
+                '//section[contains(@class, "featured_single")]//img/@data-src'
+            ).getall()
+            + r.xpath('//section[contains(@class, "rich_text")]//img/@src').getall()
+        )
+        names = r.xpath(
+            '//section[contains(@class, "featured_single")]//div[contains(@class, "content")]//*[contains(@class, "title")]//text()'
+        ).getall()
+        names = [x.strip() for x in names if x.strip()]
+        name = names[0] if names else ""
+        x["name"] = name
         x.pop('response')
         return x.asdict()
-    
+
 class GtestRichParse:
     def process_item(self, item, spider):
         x = ItemAdapter(item)
